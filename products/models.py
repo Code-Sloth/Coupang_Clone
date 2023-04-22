@@ -6,6 +6,7 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django.utils import timezone
 from datetime import timedelta,datetime
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -14,20 +15,27 @@ class Product(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_products')
     title = models.CharField(max_length=80)
     price = models.IntegerField(default=0)
-    delivery_date = models.DateField()
     star = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    content = models.TextField(null=False)
     count = models.IntegerField(default=1)
-
     category_Choices = (('패션의류/잡화', '패션의류/잡화'), ('뷰티', '뷰티'), ('식품', '식품'), ('주방용품', '주방용품'), ('생활용품', '생활용품'))
     category = models.CharField(max_length=20, choices=category_Choices)
+
+    content = RichTextUploadingField(blank=True,null=True)
+    delivery_date = models.IntegerField(default=7)
+
+    delivery_Choices = (('로켓배송','로켓배송'), ('제트배송','제트배송'), ('로켓직구','로켓직구'), ('로켓프레시','로켓프레시'))
+    delivery = models.CharField(max_length=20, choices=delivery_Choices, null=True, blank=True)
+    free_shipping = models.BooleanField(default=False)
+    c_avenue = models.BooleanField(default=False)
+    discount_rate = models.IntegerField(default=0)
 
     def count_likes_user(self):
         return self.like_users.count()
     
-
+    def __str__(self):
+        return self.title
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -63,7 +71,7 @@ class Comment(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField(null=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    star = models.IntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    star = models.IntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

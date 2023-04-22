@@ -1,23 +1,94 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% load customtag %}
+{% load humanize %}
 {% block title %}
-  쿠팡
+  쿠팡!
 {% endblock title %}
 
 {% block content %}
-  <h1>인덱스</h1>
-  <a href="{% url 'products:create' %}">Create</a>
 
-  {% for product, image in product_images %}
+  <div class="index-sidebar"></div>
+
+  <div class="index-section">
+    <a href="{% url 'products:create' %}">Create</a>
   
-    {{ product.title }}
-    {{ product.price }}
-    <a href="{% url 'products:detail' product.pk %}">{{ product.title }}</a>
+    <div class='d-flex flex-wrap'>
 
-    {% if image.image %}
-      <img src="{{ image.image.url }}" alt="{{ product.title }}">
-    {% endif %}
-    <hr>
+      {% for product, image in product_images %}
+        <a class="index-producta" href="{% url 'products:detail' product.pk %}">
+          <div style="padding: 8px;">
+            <div class="card index-productbox">
+              {% if image.image %}
+                <img src="{{ image.image.url }}" alt="{{ product.title }}">
+              {% endif %}
+              <div class="card-body p-0">
+    
+                {% if product.c_avenue %}
+                  <div class='mt-2 mt-1 mb-2'>
+                    <img src="{% static 'img/c-avenue.svg' %}" alt="c-avenue">
+                  </div>
+                {% else %}
+                  <div class='mt-2 mt-1 mb-2' style='height:24px;'></div>
+                {% endif %}
+    
+                <div class='index-title mb-2'>
+                  {{ product.title }}
+                </div>
+                
+                {% if product.discount_rate %}
+                  <div class='index-price'>
+                    <span>{{ product.discount_rate }}%</span>
+                    <span class='price'>{{ product.price }}</span>
+                  </div>
+                {% endif %}
+    
+                <div class="index-discount_price d-flex">
+                  <div class="discount_price">
+                    {{ product.price|discount_price:product.discount_rate|intcomma }}원
+                  </div>
+                  <div style='width: 64px;' class='ms-1 pb-2'>
+                    {% if product.delivery == '로켓배송' %}
+                      <img class='w-100' src="{% static 'img/rocket_delivery.png' %}" alt="rocket_delivery">
+                    {% elif product.delivery == '제트배송' %}
+                      <img class='w-100' src="{% static 'img/z_delivery.png' %}" alt="z_delivery">
+                    {% elif product.delivery == '로켓직구' %}
+                      <img class='w-100' src="{% static 'img/direct_delivery.png' %}" alt="direct_delivery">
+                    {% elif product.delivery == '로켓프레시' %}
+                      <img class='w-100' src="{% static 'img/fresh_delivery.png' %}" alt="fresh_delivery">
+                    {% endif %}
+                  </div>
+                </div>
+    
+                <div class="index-date">
+                  {{ product.delivery_date|get_future_date }}
+                </div>
+                <div>
+                <span class="star-back">
+                  <span class="star-star" style="width:{{ product.star|total_star }}%;"></span>
+                </span>
+                <p class='index-countcomment'>({{product.comment_set.all|length}})</p>
+                </div>
 
-  {% endfor %}
+                <div class="index-accumulate">
+                  <div class='d-flex align-items-center me-1' style='width:14px;'>
+                    <img class='w-100' src="{% static 'img/accumulate.png' %}" alt="accumulate">
+                  </div>
+                  
+                  <div>
+                    최대 {{ product.price|discount_price:product.discount_rate|discount_tenth|intcomma }}원 적립
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </a>
+  
+      {% endfor %}
+    </div>
+
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 {% endblock content %}
