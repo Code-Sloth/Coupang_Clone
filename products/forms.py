@@ -2,27 +2,25 @@ from django import forms
 from .models import Product,Comment,ProductImage,CommentImage
 
 class ProductForm(forms.ModelForm):
-    delivery_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={'type': 'date'},
-        ),
-    )
+
     class Meta:
         model = Product
-        fields = ('title', 'price', 'delivery_date', 'content', 'category',)
+        fields = ('title', 'content', 'price', 'discount_rate', 'delivery_date', 'category', 'delivery', 'free_shipping', 'c_avenue',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['title'].widget.attrs['class'] = 'form-control my-3'
+        self.fields['title'].widget.attrs['class'] = 'form-control mt-1'
 
-        self.fields['price'].widget.attrs['class'] = 'form-control my-3' 
+        self.fields['price'].widget.attrs['class'] = 'form-control'
 
-        self.fields['delivery_date'].widget.attrs['class'] = 'form-control my-3'
+        self.fields['discount_rate'].widget.attrs['class'] = 'form-control'
 
-        self.fields['content'].widget.attrs['class'] = 'form-control my-3'
+        self.fields['delivery_date'].widget.attrs['class'] = 'form-control'
 
-        self.fields['category'].widget.attrs['class'] = 'form-control my-3'
+        self.fields['category'].widget.attrs['class'] = 'form-control'
+
+        self.fields['delivery'].widget.attrs['class'] = 'form-control'
 
 class ProductImageForm(forms.ModelForm):
     class Meta:
@@ -33,11 +31,12 @@ class ProductImageForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['image'].widget.attrs['multiple'] = True
+        self.fields['image'].widget.attrs['class'] = 'form-control ps-1'
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('title', 'content', 'star',)
+        fields = ('title', 'content',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,9 +44,6 @@ class CommentForm(forms.ModelForm):
         self.fields['title'].widget.attrs['class'] = 'form-control my-3'
 
         self.fields['content'].widget.attrs['class'] = 'form-control my-3'
-
-        self.fields['star'].widget.attrs['class'] = 'form-control my-3'
-
 
 class CommentImageForm(forms.ModelForm):
     class Meta:

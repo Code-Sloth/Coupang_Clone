@@ -4,6 +4,12 @@
     line-height: 32px;
 }
 
+/* .nav-footer {
+    box-shadow: 1px 4px 5px rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    opacity: 0.7;
+} */
+
 
 .nav-header a{
     text-decoration: none;
@@ -39,10 +45,10 @@
     position: absolute;
     width: 150px;
     padding: 5px 0;
-    top: 150px;
-    
+    top: 145px;
+
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.3);
     background-color: white;
-    box-shadow: 1px 4px 5px rgba(0,0,0,0.3);
     transition: height 0.3s ease-out;
 }
 
@@ -257,4 +263,24 @@
 .rocket-item a:hover {
     color: rgb(0 115 233);
     text-decoration: underline;
+}
+
+.star-back {
+    background-repeat: no-repeat;
+    background-image: url("//img1a.coupangcdn.com/image/coupang/search/search_product_assets_170324.png");
+    overflow: hidden;
+    float: left;
+    width: 70px;
+    height: 17px;
+    margin-right: 3px;
+    background-position: 0 -149px;
+}
+
+.star-star {
+    background-repeat: no-repeat;
+    background-image: url("//img1a.coupangcdn.com/image/coupang/search/search_product_assets_170324.png");
+    overflow: hidden;
+    float: left;
+    height: 17px;
+    background-position: 0 -199px;
 }

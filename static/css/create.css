@@ -1,0 +1,54 @@
+.ck-editor__editable {height: 400px;}
+
+.ck-content {font-size: 12px;}
+
+.create-form input:not([type='checkbox']), .create-form select {
+  width: 835px;
+}
+
+.create-label {
+  display:block; 
+  margin-top: 20px;
+}
+
+.create-bool {
+  width: 200px;
+  margin-top: 20px;
+}
+
+.create-bool label {margin:0;}
+
+.create-register {
+  width: 835px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid rgb(52 106 255);
+  color: rgb(52 106 255);
+  background-color: white;
+  margin: 20px 0;
+}
+
+.create-deregister {
+  width: 835px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid rgb(52 106 255);
+  color: white;
+  background-color: rgb(52 106 255);
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+.create-register:hover {
+  opacity: 1; 
+  border: 1px solid rgb(4, 67, 238);
+  color: rgb(4, 67, 238);
+}
+
+.create-deregister:hover {
+  opacity: 1; 
+  background-color: 1px solid rgb(4, 67, 238);
+  color: white;
+}

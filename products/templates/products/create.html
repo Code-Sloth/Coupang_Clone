@@ -1,15 +1,71 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
   쿠팡
 {% endblock title %}
 
 {% block content %}
-  <h1>Create</h1>
-  <form action="{% url 'products:create' %}" method='POST' enctype='multipart/form-data'>
-    {% csrf_token %}
-    {{ product_form.as_p }}
-    {{ image_form }}
-    <input type="submit" class='btn' value='등록하기'>
-    <button class="btn" onclick=back()>뒤로가기</button>
+  <div class='d-flex justify-content-center'>
+
+    <form class="create-form" action="{% url 'products:create' %}" method='POST' enctype='multipart/form-data'>
+      {% csrf_token %}
+      {{ product_form.media }}
+  
+      <label class='create-label'>제품 이름</label>
+      {{ product_form.title }}
+  
+      <label class='create-label'>제품 설명</label>
+      {{ product_form.content }}
+  
+      <label class='create-label'>제품 가격</label>
+      {{ product_form.price }}
+
+      <label class='create-label'>할인율</label>
+      {{ product_form.discount_rate }}
+  
+      <label class='create-label'>배송 기한</label>
+      {{ product_form.delivery_date }}
+  
+      <label class='create-label'>카테고리</label>
+      {{ product_form.category }}
+  
+      <label class='create-label'>배송 방법</label>
+      {{ product_form.delivery }}
+  
+      <div class='create-bool d-flex justify-content-between align-items-center'>
+        <label class='create-label'>무료배송</label>
+        {{ product_form.free_shipping }}
+    
+        <label class='create-label'>C.에비뉴</label>
+        {{ product_form.c_avenue }}
+      </div>
+  
+      <div>
+        <label class='create-label'>제품 사진</label>
+        {{ image_form.image }}
+      </div>
+  
+      <div class='d-flex flex-column align-items-center'>
+
+        <div>
+          <button class='create-register create-hover' type="submit" class='btn'>등록하기</button>
+        </div>
+
+        <div>
+          <button class="create-deregister create-hover" onclick=back()>등록취소</button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/create.css' %}">
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+  <script>
+    ClassicEditor.create( document.querySelector( '#editor' ), {
+      language: "ko"
+    } );
+  </script>
 {% endblock content %}
