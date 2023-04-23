@@ -9,20 +9,95 @@ import os
 # import ModelViewSet
 # from .serializers import ProductSerializer
 
-
 # Create your views here.
 
 def index(request):
     products = Product.objects.all()
     product_images = []
     for product in products:
-        comments = product.comment_set.all()
-        count_star = 0
-        sum_comment = comments.count()
-        for comment in comments:
-            count_star += comment.star
-        avg_comment = count_star / sum_comment
-        product.star = avg_comment
+        images = ProductImage.objects.filter(product=product)
+        if images:
+            product_images.append((product, images[0]))
+        else:
+            product_images.append((product, ''))
+    
+    context = {
+        'product_images': product_images,
+        'sor': None,
+        'cate': None,
+        'sta': None,
+        'pri': None,
+        'query1': '',
+        'query2': '',
+        'searchdata': '',
+    }
+    return render(request, 'products/index.html',context)
+
+def search(request):
+    query = request.GET.get('base-query','')
+    category = request.GET.get('base-category')
+
+    if category != '전체':
+        products = Product.objects.filter(category=category)
+    else:
+        products = Product.objects.all()
+
+    if query:
+        products = products.filter(
+            Q(title__icontains=query)|
+            Q(content__icontains=query)|
+            Q(category__icontains=query)|
+            Q(delivery__icontains=query)
+        )
+
+    product_images = []
+    for product in products:
+        images = ProductImage.objects.filter(product=product)
+        if images:
+            product_images.append((product, images[0]))
+        else:
+            product_images.append((product, ''))
+    
+    context = {
+        'product_images': product_images,
+        'cate': category,
+        'sor' : None,
+        'sta' : None,
+        'pri' : None,
+        'query1' : '',
+        'query2' : '',
+        'searchdata': query,
+    }
+    return render(request, 'products/index.html',context)
+
+def filtering(request, category=None, sort=None, star=None, price=None):
+    products = Product.objects.all()
+    q1 = request.GET.get('q1')
+    q2 = request.GET.get('q2')
+
+    if category != 'None':
+        products = func_category(category)
+  
+    if sort != 'None':
+        products = func_sort(sort, products)
+    
+    if star != 'None':
+        products = func_star(star, products)
+
+    if q1 and q2:
+        products = func_price_search(q1, q2, products)
+        price = 'None'
+    else:
+        q1 = ''
+        q2 = ''
+    
+    if price != 'None':
+        products = func_price(price, products)
+        
+    
+   
+    product_images = []
+    for product in products:
         images = ProductImage.objects.filter(product=product)
         if images:
             product_images.append((product, images[0]))
@@ -31,21 +106,67 @@ def index(request):
 
     context = {
         'product_images': product_images,
+        'cate': category,
+        'sor' : sort,
+        'sta' : star,
+        'pri' : price,
+        'query1' : q1,
+        'query2' : q2,
+        'searchdata' : '',
     }
     return render(request, 'products/index.html',context)
 
-# def search(request):
-#     query = request.GET.get('q','')
-#     if query:
-#         search = product.objects.filter(
-#             Q(author__username=query)|
-#             Q(title__icontains=query)|
-#             Q(content__icontains=query)|
-#             Q(movie__icontains=query)
-#             )
-#     else:
-#         search = product.objects.all()[::-1]
-#     return render(request, 'products/index.html',{'products':search})
+def func_category(c):
+    if c == 'c_avenue':
+        return Product.objects.filter(c_avenue = True)
+    elif c == '무료배송':
+        return Product.objects.filter(free_shipping = True)
+    else:
+        return Product.objects.filter(
+            Q(category = c)|
+            Q(delivery = c)
+        )
+
+def func_sort(s, queryset):
+    if s == '최신순':
+        return queryset.order_by('-pk')
+    elif s == '별점순':
+        return queryset.order_by('-star')
+    elif s == '할인순':
+        return queryset.order_by('-discount_rate')
+    elif s == '낮은가격순':
+        return queryset.order_by('discounted_price')
+    elif s == '높은가격순':
+        return queryset.order_by('-discounted_price')
+
+def func_star(st, queryset):
+    if st == '4':
+        return queryset.filter(star__gte=4)
+    elif st == '3':
+        return queryset.filter(star__gte=3)
+    elif st == '2':
+        return queryset.filter(star__gte=2)
+    elif st == '1':
+        return queryset.filter(star__gte=1)
+    else:
+        return queryset
+        
+def func_price(p, queryset):
+    if p == '1만원 미만':
+        return queryset.filter(discounted_price__lt=10000)
+    if p == '1만원~2만원':
+        return queryset.filter(discounted_price__lt=20000, discounted_price__gte=10000)
+    if p == '2만원~3만원':
+        return queryset.filter(discounted_price__lt=30000, discounted_price__gte=20000)
+    if p == '3만원~4만원':
+        return queryset.filter(discounted_price__lt=40000, discounted_price__gte=30000)
+    if p == '4만원 이상':
+        return queryset.filter(discounted_price__gte=40000)
+    else:
+        return queryset
+    
+def func_price_search(q1, q2, queryset):
+    return queryset.filter(discounted_price__lte=q2, discounted_price__gte=q1)
 
 @login_required
 def create(request):
@@ -58,7 +179,7 @@ def create(request):
             f.save()
             for i in files:
                 ProductImage.objects.create(image=i, product=f)
-            return redirect('products:index')
+            return redirect('products:detail', f.pk)
         else:
             print(form.errors)
     else:
@@ -67,17 +188,23 @@ def create(request):
     context = {'product_form': product_form, 'image_form':image_form,}
     return render(request, 'products/create.html', context)
 
+def update_product_star(sender, instance, **kwargs):
+    product = instance.product
+    comments = Comment.objects.filter(product=product)
+    star_sum = sum([comment.star for comment in comments])
+    star_avg = star_sum / comments.count()
+    product.star = star_avg
+    product.save()
 
 def detail(request, product_pk):
     product = Product.objects.get(pk=product_pk)
     comments = product.comment_set.all()
-    count_star = 0
-    sum_comment = comments.count()
-    for comment in comments:
-        count_star += comment.star
-    avg_comment = count_star / sum_comment
-    product.star = avg_comment
-    product.save()
+
+    if comments:
+        star_sum = sum([comment.star for comment in comments])
+        star_avg = star_sum / comments.count()
+        product.star = round(star_avg,1)
+        product.save()
 
     product_images = []
     images = ProductImage.objects.filter(product=product)
@@ -148,7 +275,7 @@ def update(request, product_pk):
 @login_required
 def comment_create(request, product_pk):
     product = Product.objects.get(pk=product_pk)
-
+    
     if request.method == "POST":
         comment_form = CommentForm(request.POST)
         files = request.FILES.getlist('comment_image')
@@ -190,4 +317,5 @@ def likes(request, product_pk):
     else:
         product.like_users.add(request.user)
     return redirect('products:index', product_pk)
+
 

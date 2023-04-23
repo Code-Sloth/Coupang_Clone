@@ -28,7 +28,8 @@
     <input type="submit" value="삭제">
   </form>
   <a class='btn btn-primary' href="{% url 'products:update' product.pk %}">수정</a>
-  <a href="{% url 'products:comment_create' product.pk %}">댓글 작성</a>
+  <a class='btn btn-primary' href="{% url 'products:index' %}">메인</a>
+  <a class='btn btn-primary' href="{% url 'products:comment_create' product.pk %}">댓글 작성</a>
 
   {% for comment in comments %}
     <div class="comment">

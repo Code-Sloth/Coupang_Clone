@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:product_pk>/comments/', views.comment_create, name='comment_create'),
     path('<int:product_pk>/comments/<int:comment_pk>/delete/', views.comment_delete, name='comment_delete'),
     path('likes/<int:product_pk>/', views.likes, name='likes'),
+    path('filtering/<str:category>/<str:sort>/<str:star>/<str:price>', views.filtering, name="filtering"),
+    path('search/', views.search, name='search'),
 ]

@@ -8,13 +8,241 @@
 
 {% block content %}
 
-  <div class="index-sidebar"></div>
+  {% comment %} 사이드 바 {% endcomment %}
+  <div class="index-sidebar">
+    {% comment %} 필터 {% endcomment %}
+    <p class="my-4 mb-2 fw-bold">필터</p>
+    
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:index' %}">전체</a>
+    </div>
 
+    <div class='sidebar-filter sidebar-filter-image {% if cate == '로켓배송' %}image-gray{% endif %}'>
+      <a href="{% url 'products:filtering' category='로켓배송' sort=sor star=sta price=pri %}">
+        <div>
+          <img class='h-100' src="{% static 'img/rocket_delivery.png' %}" alt="rocket">
+        </div>
+      </a>
+    </div>
+
+    <div class='sidebar-filter sidebar-filter-image {% if cate == '제트배송' %}image-gray{% endif %}'>
+      <a href="{% url 'products:filtering' category='제트배송' sort=sor star=sta price=pri %}">
+        <div>
+          <img class='h-100' src="{% static 'img/z_delivery.png' %}" alt="z">
+        </div>
+      </a>
+    </div>
+
+    <div class='sidebar-filter sidebar-filter-image {% if cate == '로켓직구' %}image-gray{% endif %}'>
+      <a href="{% url 'products:filtering' category='로켓직구' sort=sor star=sta price=pri %}">
+        <div>
+          <img class='h-100' src="{% static 'img/direct_delivery.png' %}" alt="direct">
+        </div>
+      </a>
+    </div>
+
+    <div class='sidebar-filter sidebar-filter-image  {% if cate == '로켓프레시' %}image-gray{% endif %}'>
+      <a href="{% url 'products:filtering' category='로켓프레시' sort=sor star=sta price=pri %}">
+        <div>
+          <img class='h-100' src="{% static 'img/fresh_delivery.png' %}" alt="fresh">
+        </div>
+      </a>
+    </div>
+
+    <div class='sidebar-filter sidebar-filter-image  {% if cate == 'c_avenue' %}image-gray{% endif %}'>
+      <a href="{% url 'products:filtering' category='c_avenue' sort=sor star=sta price=pri %}">
+        <div>
+          <img class='h-100' src="{% static 'img/c-avenue.svg' %}" alt="c-avenue">
+        </div>
+      </a>
+    </div>
+    
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='무료배송' sort=sor star=sta price=pri %}" {% if cate == '무료배송' %}class='text-primary'{% endif %}>
+        <span>무료배송</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='패션의류_잡화' sort=sor star=sta price=pri %}" {% if cate == '패션의류_잡화' %}class='text-primary'{% endif %}>
+        <span>패션의류/잡화</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='뷰티' sort=sor star=sta price=pri %}" {% if cate == '뷰티' %}class="text-primary"{% endif %}>
+        <span>뷰티</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='식품' sort=sor star=sta price=pri %}" {% if cate == '식품' %}class="text-primary"{% endif %}>
+        <span>식품</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='주방용품' sort=sor star=sta price=pri %}" {% if cate == '주방용품' %}class="text-primary"{% endif %}>
+        <span>주방용품</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category='생활용품' sort=sor star=sta price=pri %}" {% if cate == '생활용품' %}class="text-primary"{% endif %}>
+        <span>생활용품</span>
+      </a>
+    </div>
+
+    <hr class='hr'>
+
+    {% comment %} 정렬 {% endcomment %}
+    <p class="my-4 mb-2 fw-bold">정렬</p>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category=cate sort='최신순' star=sta price=pri %}" {% if sor == '최신순' %}class="text-primary"{% endif %}>
+        <span>최신순</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category=cate sort='별점순' star=sta price=pri %}" {% if sor == '별점순' %}class="text-primary"{% endif %}>
+        <span>별점순</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category=cate sort='할인순' star=sta price=pri %}" {% if sor == '할인순' %}class="text-primary"{% endif %}>
+        <span>할인순</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category=cate sort='낮은가격순' star=sta price=pri %}" {% if sor == '낮은가격순' %}class="text-primary"{% endif %}>
+        <span>낮은가격순</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter'>
+      <a href="{% url 'products:filtering' category=cate sort='높은가격순' star=sta price=pri %}" {% if sor == '높은가격순' %}class="text-primary"{% endif %}>
+        <span>높은가격순</span>
+      </a>
+    </div>
+
+    <hr class='hr'>
+
+    {% comment %} 별점 {% endcomment %}
+    <p class="my-4 mb-2 fw-bold">별점</p>
+
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star='all' price=pri %}" {% if sta == 'all' %}class="text-primary"{% endif %}>
+        <span>별점 전체</span>
+      </a>
+    </div>
+
+    <div class='sidebar-star'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star='4' price=pri %}">
+        <div {% if sta == '4' %}class="star-opacity"{% endif %} >
+          <span class="star-back">
+            <span class="star-star" style="width:80%;"></span>
+          </span>
+          4점 이상
+        </div>
+      </a>
+    </div>
+
+    <div class='sidebar-star'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star='3' price=pri %}">
+        <div {% if sta == '3' %}class="star-opacity"{% endif %}>
+          <span class="star-back">
+            <span class="star-star" style="width:60%;"></span>
+          </span>
+          3점 이상
+        </div>
+      </a>
+    </div>
+    
+
+    <div class='sidebar-star'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star='2' price=pri %}">
+        <div {% if sta == '2' %}class="star-opacity"{% endif %}>
+          <span class="star-back">
+            <span class="star-star" style="width:40%;"></span>
+          </span>
+          2점 이상
+        </div>
+      </a>
+    </div>
+    
+    <div class='sidebar-star'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star='1' price=pri %}">
+        <div {% if sta == '1' %}class="star-opacity"{% endif %}>
+          <span class="star-back">
+            <span class="star-star" style="width:20%;"></span>
+          </span>
+          1점 이상
+        </div>
+      </a>
+    </div>
+    
+    <hr class='hr'>
+
+    {% comment %} 가격 {% endcomment %}
+    <p class="my-4 mb-2 fw-bold">가격</p>
+    
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='all' %}" {% if pri == 'all' %}class="text-primary"{% endif %}>
+        <span>가격 전체</span>
+      </a>
+    </div>
+    
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='1만원 미만' %}" {% if pri == '1만원 미만' %}class="text-primary"{% endif %}>
+        <span>1만원 미만</span>
+      </a>
+    </div>
+    
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='1만원~2만원' %}" {% if pri == '1만원~2만원' %}class="text-primary"{% endif %}>
+        <span>1만원~2만원</span>
+      </a>
+    </div>
+    
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='2만원~3만원' %}" {% if pri == '2만원~3만원' %}class="text-primary"{% endif %}>
+        <span>2만원~3만원</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='3만원~4만원' %}" {% if pri == '3만원~4만원' %}class="text-primary"{% endif %}>
+        <span>3만원~4만원</span>
+      </a>
+    </div>
+
+    <div class='sidebar-filter' style='padding-left: 0;'>
+      <a href="{% url 'products:filtering' category=cate sort=sor star=sta price='4만원 이상' %}" {% if pri == '4만원 이상' %}class="text-primary"{% endif %}>
+        <span>4만원 이상</span>
+      </a>
+    </div>
+
+    <div class='my-2 mb-4'>
+      <form action="{% url 'products:filtering' category=cate sort=sor star=sta price=pri %}">
+        <div class='d-flex align-items-center'>
+          <input class="sidebar-search" name='q1' type="search" value="{{ query1 }}" autocomplete="off">
+          <span style='font-size:12px;' class='mx-1'>~</span>
+          <input class="sidebar-search" name='q2' type="search" value="{{ query2 }}" autocomplete="off">
+          <span style='font-size:12px;'>원</span>
+          <button class="sidebar-searchbtn" type='submit'>검색</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  {% comment %} 섹션 {% endcomment %}
   <div class="index-section">
-    <a href="{% url 'products:create' %}">Create</a>
-  
     <div class='d-flex flex-wrap'>
-
       {% for product, image in product_images %}
         <a class="index-producta" href="{% url 'products:detail' product.pk %}">
           <div style="padding: 8px;">
@@ -39,13 +267,13 @@
                 {% if product.discount_rate %}
                   <div class='index-price'>
                     <span>{{ product.discount_rate }}%</span>
-                    <span class='price'>{{ product.price }}</span>
+                    <span class='price'>{{ product.price|intcomma }}</span>
                   </div>
                 {% endif %}
     
                 <div class="index-discount_price d-flex">
                   <div class="discount_price">
-                    {{ product.price|discount_price:product.discount_rate|intcomma }}원
+                    {{ product.discounted_price|intcomma }}원
                   </div>
                   <div style='width: 64px;' class='ms-1 pb-2'>
                     {% if product.delivery == '로켓배송' %}
@@ -76,7 +304,7 @@
                   </div>
                   
                   <div>
-                    최대 {{ product.price|discount_price:product.discount_rate|discount_tenth|intcomma }}원 적립
+                    최대 {{ product.discounted_price|discount_tenth|intcomma }}원 적립
                   </div>
                 </div>
               </div>

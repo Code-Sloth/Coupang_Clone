@@ -7,6 +7,8 @@ from imagekit.processors import ResizeToFill
 from django.utils import timezone
 from datetime import timedelta,datetime
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -15,11 +17,11 @@ class Product(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_products')
     title = models.CharField(max_length=80)
     price = models.IntegerField(default=0)
-    star = models.IntegerField(default=0)
+    star = models.DecimalField(default=0, max_digits=5, decimal_places=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     count = models.IntegerField(default=1)
-    category_Choices = (('패션의류/잡화', '패션의류/잡화'), ('뷰티', '뷰티'), ('식품', '식품'), ('주방용품', '주방용품'), ('생활용품', '생활용품'))
+    category_Choices = (('패션의류_잡화', '패션의류/잡화'), ('뷰티', '뷰티'), ('식품', '식품'), ('주방용품', '주방용품'), ('생활용품', '생활용품'))
     category = models.CharField(max_length=20, choices=category_Choices)
 
     content = RichTextUploadingField(blank=True,null=True)
@@ -30,12 +32,21 @@ class Product(models.Model):
     free_shipping = models.BooleanField(default=False)
     c_avenue = models.BooleanField(default=False)
     discount_rate = models.IntegerField(default=0)
+    discounted_price = models.IntegerField(default=0)
 
     def count_likes_user(self):
         return self.like_users.count()
     
     def __str__(self):
         return self.title
+
+    def calculate_discount_price(self):
+        return round((self.price * (1 -self.discount_rate / 100)) / 10) * 10
+
+    def save(self,*args, **kargs):
+        self.discounted_price = self.calculate_discount_price()
+        super().save(*args, **kargs)
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -90,6 +101,7 @@ class Comment(models.Model):
             return str(time.days) + '일 전'
         else:
             return self.strftime('%Y-%m-%d')
+
 
 class CommentImage(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_img')

@@ -18,9 +18,6 @@ def format_time_since(value):
     else:
         return value.strftime('%Y-%m-%d')
 
-def discount_price(price, discount):
-    return round((int(price) * (1 - int(discount) / 100)) / 10) * 10
-
 def get_future_date(days):
     today = datetime.date.today()
     future_date = today + datetime.timedelta(days=days)
@@ -35,10 +32,10 @@ def get_future_date(days):
         return f'{future}요일 {future_date.month}/{future_date.day} 도착 예정'
 
 def discount_tenth(price):
-    return str(int(price)//10)
+    return str(int(price)//20)
 
 def total_star(star):
-    for i in range(5):
+    for i in range(6):
         if i <= star < i+0.5:
             star_rating = i
         elif i+0.5 <= star < i+1:
@@ -46,7 +43,6 @@ def total_star(star):
     return str(int(star_rating*20))
 
 register.filter('format_time_since', format_time_since)
-register.filter('discount_price', discount_price)
 register.filter('get_future_date', get_future_date)
 register.filter('discount_tenth', discount_tenth)
 register.filter('total_star', total_star)

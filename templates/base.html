@@ -85,31 +85,48 @@
             </a>
           </div>
           <div class="search-box">
-            <form action="." method="post" class="searchform">
+            <form action="{% url 'products:search' %}" class="searchform">
               {% csrf_token %}
-              <div class="cateogory-box">
-                <a href="" class="sellect-button"></a>
-                <select class="sellect-category">
-                  <option>전체</option>
-                  <option><a href="">여성패션</a></option>
-                  <option>남성패션</option>
-                  <option>남녀 공용 의류</option>
-                  <option>유아동패션</option>
-                  <option>뷰티</li동패션>
-                  <option>식품</option>
-                  <option>주방용품</option>
-                  <option>생활용품</option>
-                </select>
+              <div class="category-box">
+                <a class="btn btn-primary category-box" style='opacity: 0;' data-bs-toggle="collapse" href="#collapseExample5" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  <a href="" class="sellect-button"></a>
+                  <select class="sellect-category">
+                    <option id="search-option">전체</option>
+                  </select>
+                </a>
+
+                <div class="search-collapse collapse multi-collapse" id="collapseExample5">
+                  <div id='searchcard' class="card card-body border-0 m-0 ps-2">
+                    <div>
+                      <button class="search-button" type="button">전체</button>
+                    </div>
+                    <div>
+                      <button class="search-button" type="button">패션의류_잡화</button>
+                    </div>
+                    <div>
+                      <button class="search-button" type="button">뷰티</button>
+                    </div>
+                    <div>
+                      <button class="search-button" type="button">식품</button>
+                    </div>
+                    <div>
+                      <button class="search-button" type="button">주방용품</button>
+                    </div>
+                    <div>
+                      <button class="search-button" type="button">생활용품</button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-                <input class="search-txt" type="text" placeholder="찾고 싶은 상품을 검색해보세요!">
-                <a href="#" class="microphone"></a>
-                <a class="search-btn" type="submit"></a>
+              <input name="base-query" class="search-txt" type="search" placeholder="찾고 싶은 상품을 검색해보세요!" value="{{ searchdata }}">
+              <a href="#" class="microphone"></a>
+              <button id="search-submit" name="base-category" value="전체" class="search-btn" type="submit"></button>
             </form>
           </div>
           
           <div class="d-flex flex-column align-items-center ms-3">
-            <a href=""><svg width="31px" height="33px" viewBox="0 0 64.00 64.00" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#646464" fill="none" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="32" cy="20.14" r="11.14"></circle><path d="M54.55,56.85A22.55,22.55,0,0,0,32,34.3h0A22.55,22.55,0,0,0,9.45,56.85Z"></path></g></svg></a>
+            <a href="{% url 'products:create' %}"><svg width="31px" height="33px" viewBox="0 0 64.00 64.00" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#646464" fill="none" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="32" cy="20.14" r="11.14"></circle><path d="M54.55,56.85A22.55,22.55,0,0,0,32,34.3h0A22.55,22.55,0,0,0,9.45,56.85Z"></path></g></svg></a>
             <span class="mycoupang">마이쿠팡</span>
           </div>
 
